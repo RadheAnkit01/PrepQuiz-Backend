@@ -7,9 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ChapterDto {
-    private Long id;
+public class CreateChapterDto {
     private String name;
     private Long subjectId;
-    private String subjectName;
 }

@@ -2,8 +2,7 @@ package online.prepquiz.Prep.Quiz.user;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import online.prepquiz.Prep.Quiz.common.enums.Role;
-import online.prepquiz.Prep.Quiz.common.exception.UserNotFoundException;
+import online.prepquiz.Prep.Quiz.common.exception.ResourceNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,7 @@ public class UserService {
 
     protected User getLoggedInUser(){
         String email = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-        return userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not Found for : " + email));
+        return userRepository.findByEmail(email).orElseThrow(()->new ResourceNotFoundException("User Not Found for email : " + email));
     }
 
     @Transactional

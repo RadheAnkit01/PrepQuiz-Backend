@@ -1,12 +1,11 @@
 package online.prepquiz.Prep.Quiz.security;
 
 import lombok.RequiredArgsConstructor;
-import online.prepquiz.Prep.Quiz.common.exception.UserNotFoundException;
+import online.prepquiz.Prep.Quiz.common.exception.ResourceNotFoundException;
 import online.prepquiz.Prep.Quiz.user.User;
 import online.prepquiz.Prep.Quiz.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,9 +14,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws ResourceNotFoundException {
         User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException("User Not Found for " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found for " + username));
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())

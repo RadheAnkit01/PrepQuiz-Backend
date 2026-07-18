@@ -1,6 +1,7 @@
 package online.prepquiz.Prep.Quiz.course;
 
 import lombok.AllArgsConstructor;
+import online.prepquiz.Prep.Quiz.common.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class CourseService {
 
     public Course getById(Long id){
         return courseRepository.findById(id).orElseThrow(
-                ()->new RuntimeException("Course Not Found For ID : " + id)
+                ()->new ResourceNotFoundException("Course Not Found For ID : " + id)
         );
     }
 }

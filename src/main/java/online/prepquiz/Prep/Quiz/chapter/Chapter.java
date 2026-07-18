@@ -20,7 +20,7 @@ public class Chapter {
     @SequenceGenerator(
             name = "chapter_seq",
             sequenceName = "chapter_sequence",
-            initialValue = 1000,
+            initialValue = 10000,
             allocationSize = 1
     )
     private Long id;
@@ -31,10 +31,5 @@ public class Chapter {
     @JoinColumn(name = "subject_id",nullable = false)
     private Subject subject;
 
-//    @OneToMany(
-//            mappedBy = "chapter",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true
-//    )
-//    private List<Quiz> quizs = new ArrayList<>();
+
 }

@@ -1,6 +1,7 @@
 package online.prepquiz.Prep.Quiz.subject;
 
 import lombok.AllArgsConstructor;
+import online.prepquiz.Prep.Quiz.common.exception.ResourceNotFoundException;
 import online.prepquiz.Prep.Quiz.course.Course;
 import online.prepquiz.Prep.Quiz.course.CourseService;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,9 @@ public class SubjectService {
 
         Subject savedSubject = subjectRepository.save(subject);
         return mapSubject(savedSubject);
+    }
+
+    public Subject findbyId(Long id){
+        return subjectRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Subject Not Found for Id : " + id));
     }
 }
