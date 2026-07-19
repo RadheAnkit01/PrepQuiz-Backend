@@ -23,7 +23,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Option extends Auditable {
+public class Option {
 
     @Id
     @GeneratedValue(
