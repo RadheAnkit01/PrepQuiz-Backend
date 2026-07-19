@@ -22,7 +22,7 @@ public interface AssessmentService {
             AssessmentScopeType scopeType,
             Long scopeId,
             AssessmentStatus status,
-            Pageable pageable
+            int page, int pageSize, String direction, String sortBy
     );
 
     AssessmentResponseDto updateAssessment(

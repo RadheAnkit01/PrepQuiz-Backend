@@ -1,6 +1,9 @@
 package online.prepquiz.Prep.Quiz.assessment.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import online.prepquiz.Prep.Quiz.assessment.dto.AssessmentResponseDto;
 import online.prepquiz.Prep.Quiz.assessment.dto.CreateAssessmentDto;
@@ -8,6 +11,7 @@ import online.prepquiz.Prep.Quiz.assessment.dto.UpdateAssessmentDto;
 import online.prepquiz.Prep.Quiz.assessment.enums.AssessmentScopeType;
 import online.prepquiz.Prep.Quiz.assessment.enums.AssessmentStatus;
 import online.prepquiz.Prep.Quiz.assessment.service.AssessmentService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -43,28 +47,24 @@ public class AssessmentController {
         );
     }
 
-    //List Assessments
+    //PageList of Assessments
     @GetMapping
     public ResponseEntity<Page<AssessmentResponseDto>> getAssessments(
-            @RequestParam(required = false)
-            AssessmentScopeType scopeType,
+            @RequestParam(required = false) AssessmentScopeType scopeType,
+            @RequestParam(required = false) Long scopeId,
+            @RequestParam(required = false) AssessmentStatus status,
+            @RequestParam(defaultValue = "0") int page,
 
-            @RequestParam(required = false)
-            Long scopeId,
+            @RequestParam(defaultValue = "25")
+            @Min(value = 1, message = "pageSize must be at least 1")
+            @Max(value = 50, message = "pageSize cannot be greater than 50")
+            int pageSize,
 
-            @RequestParam(required = false)
-            AssessmentStatus status,
-
-            Pageable pageable
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(defaultValue = "id") String sortBy
     ) {
-
-        return ResponseEntity.ok(
-                assessmentService.getAssessments(
-                        scopeType,
-                        scopeId,
-                        status,
-                        pageable
-                )
+        return ResponseEntity.ok(assessmentService
+                .getAssessments(scopeType, scopeId, status, page, pageSize, direction, sortBy)
         );
     }
 

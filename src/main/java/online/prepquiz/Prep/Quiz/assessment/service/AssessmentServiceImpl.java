@@ -24,7 +24,9 @@ import online.prepquiz.Prep.Quiz.question.repository.QuestionRepository;
 import online.prepquiz.Prep.Quiz.question.service.QuestionService;
 import online.prepquiz.Prep.Quiz.subject.SubjectService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,8 +91,12 @@ public class AssessmentServiceImpl implements AssessmentService{
             AssessmentScopeType scopeType,
             Long scopeId,
             AssessmentStatus status,
-            Pageable pageable
+            int pageNo, int pageSize, String direction, String sortBy
     ) {
+            Sort sort = direction.equalsIgnoreCase("asc")? Sort.by(sortBy).ascending():
+                    Sort.by(sortBy).descending();
+            Pageable pageable =  PageRequest.of(pageNo,pageSize,sort);
+
         Page<Assessment> page;
         if (scopeType != null && scopeId != null && status != null) {
             page = assessmentRepository
@@ -118,8 +124,6 @@ public class AssessmentServiceImpl implements AssessmentService{
         }
         return page.map(assessmentMapper::toResponse);
     }
-
-
 
 
     @Override
