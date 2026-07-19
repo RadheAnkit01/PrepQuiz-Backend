@@ -1,4 +1,4 @@
-package online.prepquiz.Prep.Quiz.common.enums;
+package online.prepquiz.Prep.Quiz.quiz;
 
 public enum QuizTypes {
     PREBUILD,GENERATED

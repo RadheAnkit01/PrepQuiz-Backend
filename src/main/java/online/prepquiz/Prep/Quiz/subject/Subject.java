@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import online.prepquiz.Prep.Quiz.chapter.Chapter;
+import online.prepquiz.Prep.Quiz.common.baseclass.Auditable;
 import online.prepquiz.Prep.Quiz.course.Course;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 @Table(name = "subjects",uniqueConstraints = {@UniqueConstraint(columnNames = {"course_id", "name"})})
 @Getter
 @Setter
-public class Subject {
+public class Subject extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subject_seq")
     @SequenceGenerator(

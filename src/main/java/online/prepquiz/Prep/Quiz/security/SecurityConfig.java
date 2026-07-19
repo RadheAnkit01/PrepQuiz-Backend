@@ -1,7 +1,7 @@
 package online.prepquiz.Prep.Quiz.security;
 
 import lombok.AllArgsConstructor;
-import online.prepquiz.Prep.Quiz.common.enums.Role;
+import online.prepquiz.Prep.Quiz.user.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,8 +24,8 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((s)-> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth-> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/**").hasAnyRole(Role.USER.name(),Role.ADMIN.name())
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/**").hasAnyRole(Role.USER.name(),Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

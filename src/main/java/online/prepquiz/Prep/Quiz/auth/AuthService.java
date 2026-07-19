@@ -1,11 +1,10 @@
 package online.prepquiz.Prep.Quiz.auth;
 
 import lombok.AllArgsConstructor;
-import online.prepquiz.Prep.Quiz.common.enums.Role;
+import online.prepquiz.Prep.Quiz.user.Role;
 import online.prepquiz.Prep.Quiz.security.JwtService;
 import online.prepquiz.Prep.Quiz.user.User;
 import online.prepquiz.Prep.Quiz.user.UserRepository;
-import online.prepquiz.Prep.Quiz.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

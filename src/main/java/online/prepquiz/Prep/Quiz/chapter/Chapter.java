@@ -3,6 +3,7 @@ package online.prepquiz.Prep.Quiz.chapter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import online.prepquiz.Prep.Quiz.common.baseclass.Auditable;
 import online.prepquiz.Prep.Quiz.subject.Subject;
 
 @Entity
@@ -14,7 +15,7 @@ import online.prepquiz.Prep.Quiz.subject.Subject;
 )
 @Getter
 @Setter
-public class Chapter {
+public class Chapter extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chapter_seq")
     @SequenceGenerator(

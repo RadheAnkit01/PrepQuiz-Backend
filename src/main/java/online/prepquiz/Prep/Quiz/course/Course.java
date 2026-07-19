@@ -3,6 +3,7 @@ package online.prepquiz.Prep.Quiz.course;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import online.prepquiz.Prep.Quiz.common.baseclass.Auditable;
 import online.prepquiz.Prep.Quiz.subject.Subject;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Course {
+public class Course extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator = "course_seq")
     @SequenceGenerator(

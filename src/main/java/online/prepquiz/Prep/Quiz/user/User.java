@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
-import online.prepquiz.Prep.Quiz.common.enums.Role;
+import online.prepquiz.Prep.Quiz.common.baseclass.Auditable;
 import online.prepquiz.Prep.Quiz.course.Course;
 
 import java.util.UUID;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class User {
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

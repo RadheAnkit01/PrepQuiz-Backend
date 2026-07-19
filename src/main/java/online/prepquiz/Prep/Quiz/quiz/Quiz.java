@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import online.prepquiz.Prep.Quiz.chapter.Chapter;
+import online.prepquiz.Prep.Quiz.common.baseclass.Auditable;
 
 @Entity
 @Table(name = "quizzes")
 @Getter
 @Setter
-public class Quiz {
+public class Quiz extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_seq")

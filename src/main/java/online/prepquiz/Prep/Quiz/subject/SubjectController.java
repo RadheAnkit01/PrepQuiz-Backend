@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/subjects")
+@RequestMapping("/api/v1/subjects")
 public class SubjectController {
     private final SubjectService subjectService;
     @GetMapping

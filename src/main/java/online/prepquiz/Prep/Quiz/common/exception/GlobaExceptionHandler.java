@@ -4,6 +4,7 @@ import online.prepquiz.Prep.Quiz.common.dto.ErrorResponseDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,13 +19,11 @@ public class GlobaExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleDuplicateEntry(DataIntegrityViolationException exception){
         ErrorResponseDto error = new ErrorResponseDto(
                 HttpStatus.CONFLICT.value(),
-                "Duplicate Resouces",
+                exception.getMostSpecificCause().getMessage(),
                 LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
-
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
@@ -59,6 +58,24 @@ public class GlobaExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponseDto> handleDuplicateResourceException(
+            DuplicateResourceException ex
+    ) {
+
+        ErrorResponseDto error = new ErrorResponseDto(
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
 
 
 }

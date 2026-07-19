@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/chapters")
+@RequestMapping("/api/v1/chapters")
 public class ChapterController {
     private final ChapterService chapterService;
     @GetMapping(params = "subjectId")
