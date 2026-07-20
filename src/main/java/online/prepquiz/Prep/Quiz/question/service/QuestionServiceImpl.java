@@ -4,14 +4,23 @@ import lombok.RequiredArgsConstructor;
 import online.prepquiz.Prep.Quiz.chapter.Chapter;
 import online.prepquiz.Prep.Quiz.chapter.ChapterRepository;
 import online.prepquiz.Prep.Quiz.common.exception.ResourceNotFoundException;
+import online.prepquiz.Prep.Quiz.question.QuestionSpecification;
 import online.prepquiz.Prep.Quiz.question.dto.*;
 import online.prepquiz.Prep.Quiz.question.entity.Option;
 import online.prepquiz.Prep.Quiz.question.entity.Question;
+import online.prepquiz.Prep.Quiz.question.enums.Difficulty;
+import online.prepquiz.Prep.Quiz.question.enums.QuestionScopeType;
 import online.prepquiz.Prep.Quiz.question.enums.QuestionStatus;
+import online.prepquiz.Prep.Quiz.question.enums.QuestionType;
 import online.prepquiz.Prep.Quiz.question.mapper.OptionMapper;
 import online.prepquiz.Prep.Quiz.question.mapper.QuestionMapper;
 import online.prepquiz.Prep.Quiz.question.repository.QuestionRepository;
 import online.prepquiz.Prep.Quiz.question.validation.QuestionValidator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,16 +68,42 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<QuestionResponseDto> getQuestionsByChapter(Long chapterId) {
+//
+//        getChapterOrThrow(chapterId);
+//
+//        return questionRepository.findByChapterId(chapterId)
+//                .stream()
+//                .map(questionMapper::toResponse)
+//                .toList();
+//    }
+
     @Override
-    @Transactional(readOnly = true)
-    public List<QuestionResponseDto> getQuestionsByChapter(Long chapterId) {
+    public Page<QuestionResponseDto> getQuestions(QuestionScopeType scopeType, Long scopeId, QuestionType questionType, Difficulty difficulty, QuestionStatus status, int pageNo, int pageSize, String direction, String sortBy) {
 
-        getChapterOrThrow(chapterId);
+        Sort sort = direction.equalsIgnoreCase("asc")? Sort.by(sortBy).ascending():
+                Sort.by(sortBy).descending();
+        Pageable pageable =  PageRequest.of(pageNo,pageSize,sort);
 
-        return questionRepository.findByChapterId(chapterId)
-                .stream()
-                .map(questionMapper::toResponse)
-                .toList();
+        Specification<Question> specification =
+                Specification.where(
+                        QuestionSpecification.hasScope(scopeType, scopeId)
+                ).and(
+                        QuestionSpecification.hasDifficulty(difficulty)
+                ).and(
+                        QuestionSpecification.hasStatus(status)
+                ).and(
+                        QuestionSpecification.hasQuestionType(questionType)
+                );
+
+        Page<Question> questions =
+                questionRepository.findAll(
+                        specification,
+                        pageable
+                );
+        return questions.map(questionMapper::toResponse);
     }
 
     @Override
@@ -97,6 +132,8 @@ public class QuestionServiceImpl implements QuestionService{
         Question question = getQuestionOrThrow(id);
         questionRepository.delete(question);
     }
+
+
 
     private Chapter getChapterOrThrow(Long chapterId) {
 

@@ -3,7 +3,6 @@ package online.prepquiz.Prep.Quiz.assessment.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import online.prepquiz.Prep.Quiz.assessment.dto.AssessmentResponseDto;
 import online.prepquiz.Prep.Quiz.assessment.dto.CreateAssessmentDto;
@@ -11,9 +10,7 @@ import online.prepquiz.Prep.Quiz.assessment.dto.UpdateAssessmentDto;
 import online.prepquiz.Prep.Quiz.assessment.enums.AssessmentScopeType;
 import online.prepquiz.Prep.Quiz.assessment.enums.AssessmentStatus;
 import online.prepquiz.Prep.Quiz.assessment.service.AssessmentService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -105,7 +102,7 @@ public class AssessmentController {
 
         assessmentService.publishAssessment(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 
