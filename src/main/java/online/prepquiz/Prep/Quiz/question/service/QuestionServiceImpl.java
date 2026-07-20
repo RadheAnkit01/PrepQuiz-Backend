@@ -3,6 +3,7 @@ package online.prepquiz.Prep.Quiz.question.service;
 import lombok.RequiredArgsConstructor;
 import online.prepquiz.Prep.Quiz.chapter.Chapter;
 import online.prepquiz.Prep.Quiz.chapter.ChapterRepository;
+import online.prepquiz.Prep.Quiz.common.exception.BadRequestException;
 import online.prepquiz.Prep.Quiz.common.exception.ResourceNotFoundException;
 import online.prepquiz.Prep.Quiz.question.QuestionSpecification;
 import online.prepquiz.Prep.Quiz.question.dto.*;
@@ -59,6 +60,53 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    @Transactional
+    public BulkQuestionResponseDto createQuestions(
+            List<CreateQuestionDto> requests
+    ) {
+        if (requests.isEmpty()) {
+
+            throw new BadRequestException(
+                    "Question list cannot be empty."
+            );
+        }
+
+        if (requests.size() > 500) {
+
+            throw new BadRequestException(
+                    "Maximum 500 questions can be uploaded at a time."
+            );
+        }
+
+        List<Question> questions = new ArrayList<>();
+        for (CreateQuestionDto request : requests) {
+            questionValidator.validateForCreate(request);
+            Question question = questionMapper.toEntity(request);
+            Chapter chapter = getChapterOrThrow(request.getChapterId());
+            question.setChapter(chapter);
+            question.setOptions(
+                    buildOptions(
+                            question,
+                            request.getOptions()
+                    )
+            );
+            questions.add(question);
+        }
+        List<Question> savedQuestions =
+                questionRepository.saveAll(questions);
+        return BulkQuestionResponseDto.builder()
+                .total(requests.size())
+                .success(savedQuestions.size())
+                .failed(0)
+                .questions(
+                        savedQuestions.stream()
+                                .map(questionMapper::toResponse)
+                                .toList()
+                )
+                .build();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public QuestionResponseDto getQuestionById(Long questionId) {
 
@@ -67,18 +115,6 @@ public class QuestionServiceImpl implements QuestionService{
         return questionMapper.toResponse(question);
     }
 
-
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<QuestionResponseDto> getQuestionsByChapter(Long chapterId) {
-//
-//        getChapterOrThrow(chapterId);
-//
-//        return questionRepository.findByChapterId(chapterId)
-//                .stream()
-//                .map(questionMapper::toResponse)
-//                .toList();
-//    }
 
     @Override
     public Page<QuestionResponseDto> getQuestions(QuestionScopeType scopeType, Long scopeId, QuestionType questionType, Difficulty difficulty, QuestionStatus status, int pageNo, int pageSize, String direction, String sortBy) {

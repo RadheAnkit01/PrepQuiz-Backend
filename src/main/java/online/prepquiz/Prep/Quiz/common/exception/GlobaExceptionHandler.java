@@ -1,17 +1,27 @@
 package online.prepquiz.Prep.Quiz.common.exception;
 
+//import tools.jackson.databind.JsonMappingException;
+//import tools.jackson.databind.exc.InvalidFormatException;
+//import tools.jackson.databind.JsonMappingException;
+//import tools.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+//import com.fasterxml.jackson.databind.JsonMappingException;
 import online.prepquiz.Prep.Quiz.common.dto.ErrorResponseDto;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobaExceptionHandler {
@@ -106,5 +116,78 @@ public class GlobaExceptionHandler {
                         LocalDateTime.now()
                 ));
     }
+
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex
+    ) {
+
+        Throwable cause = ex.getMostSpecificCause();
+
+        if (cause instanceof InvalidFormatException invalidFormatException
+                && invalidFormatException.getTargetType().isEnum()) {
+
+            String fieldName = "unknown";
+
+            if (!invalidFormatException.getPath().isEmpty()) {
+                fieldName = invalidFormatException.getPath()
+                        .get(0)
+                        .getFieldName();
+            }
+
+            String invalidValue = String.valueOf(invalidFormatException.getValue());
+
+            String allowedValues = Arrays.stream(
+                            invalidFormatException.getTargetType().getEnumConstants())
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+
+            return ResponseEntity.badRequest().body(
+                    ErrorResponseDto.builder()
+                            .status(HttpStatus.BAD_REQUEST.value())
+                            .message(String.format(
+                                    "Invalid value '%s' for field '%s'. Allowed values are: [%s].",
+                                    invalidValue,
+                                    fieldName,
+                                    allowedValues
+                            ))
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
+        }
+
+
+        return ResponseEntity.badRequest().body(
+                ErrorResponseDto.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message("Malformed JSON request. Possibly something wrong in JSON request.")
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+
+
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorResponseDto> handleMethodValidation(
+            HandlerMethodValidationException ex
+    ) {
+
+        String message = ex.getAllErrors()
+                .stream()
+                .map(MessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(", "));
+
+        return ResponseEntity.badRequest().body(
+                ErrorResponseDto.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message("Malformed JSON request : " + message)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
 
 }

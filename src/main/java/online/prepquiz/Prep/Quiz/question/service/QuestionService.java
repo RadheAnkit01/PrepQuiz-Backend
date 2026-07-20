@@ -2,6 +2,7 @@ package online.prepquiz.Prep.Quiz.question.service;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import online.prepquiz.Prep.Quiz.question.dto.BulkQuestionResponseDto;
 import online.prepquiz.Prep.Quiz.question.dto.CreateQuestionDto;
 import online.prepquiz.Prep.Quiz.question.dto.QuestionResponseDto;
 import online.prepquiz.Prep.Quiz.question.dto.UpdateQuestionDto;
@@ -16,6 +17,10 @@ import java.util.List;
 public interface QuestionService {
 
     QuestionResponseDto createQuestion(CreateQuestionDto request);
+
+    BulkQuestionResponseDto createQuestions(
+            List<CreateQuestionDto> requests
+    );
 
     QuestionResponseDto getQuestionById(Long id);
 

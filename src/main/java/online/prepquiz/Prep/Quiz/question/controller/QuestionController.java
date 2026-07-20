@@ -4,7 +4,10 @@ package online.prepquiz.Prep.Quiz.question.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import online.prepquiz.Prep.Quiz.question.dto.BulkQuestionResponseDto;
 import online.prepquiz.Prep.Quiz.question.dto.CreateQuestionDto;
 import online.prepquiz.Prep.Quiz.question.dto.QuestionResponseDto;
 import online.prepquiz.Prep.Quiz.question.dto.UpdateQuestionDto;
@@ -50,16 +53,6 @@ public class QuestionController {
         );
     }
 
-//    @GetMapping("/chapter/{chapterId}")
-//    public ResponseEntity<List<QuestionResponseDto>> getQuestionsByChapter(
-//            @PathVariable Long chapterId
-//    ) {
-//
-//        return ResponseEntity.ok(
-//                questionService.getQuestionsByChapter(chapterId)
-//        );
-//    }
-
 
     @GetMapping
     public ResponseEntity<Page<QuestionResponseDto>> getQuestions(
@@ -91,6 +84,21 @@ public class QuestionController {
                 )
         );
     }
+
+
+    // bulk question adding.
+    @PostMapping("/bulk")
+    public ResponseEntity<BulkQuestionResponseDto> createQuestions(
+             @RequestBody
+             @NotEmpty
+             @Size(max = 200, message = "You cannot add more then 200 questions at a time")
+             List<@Valid CreateQuestionDto> requests
+    ) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(questionService.createQuestions(requests));
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<QuestionResponseDto> updateQuestion(
