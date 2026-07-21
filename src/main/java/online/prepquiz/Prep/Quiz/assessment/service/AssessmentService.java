@@ -5,6 +5,7 @@ import online.prepquiz.Prep.Quiz.assessment.dto.CreateAssessmentDto;
 import online.prepquiz.Prep.Quiz.assessment.dto.UpdateAssessmentDto;
 import online.prepquiz.Prep.Quiz.assessment.enums.AssessmentScopeType;
 import online.prepquiz.Prep.Quiz.assessment.enums.AssessmentStatus;
+import online.prepquiz.Prep.Quiz.common.dto.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +19,7 @@ public interface AssessmentService {
             Long id
     );
 
-    Page<AssessmentResponseDto> getAssessments(
+    PageResponse<AssessmentResponseDto> getAssessments(
             AssessmentScopeType scopeType,
             Long scopeId,
             AssessmentStatus status,

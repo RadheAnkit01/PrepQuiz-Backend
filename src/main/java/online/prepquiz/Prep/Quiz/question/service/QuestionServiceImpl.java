@@ -3,8 +3,10 @@ package online.prepquiz.Prep.Quiz.question.service;
 import lombok.RequiredArgsConstructor;
 import online.prepquiz.Prep.Quiz.chapter.Chapter;
 import online.prepquiz.Prep.Quiz.chapter.ChapterRepository;
+import online.prepquiz.Prep.Quiz.common.dto.PageResponse;
 import online.prepquiz.Prep.Quiz.common.exception.BadRequestException;
 import online.prepquiz.Prep.Quiz.common.exception.ResourceNotFoundException;
+import online.prepquiz.Prep.Quiz.common.mapper.PageResponseMapper;
 import online.prepquiz.Prep.Quiz.question.QuestionSpecification;
 import online.prepquiz.Prep.Quiz.question.dto.*;
 import online.prepquiz.Prep.Quiz.question.entity.Option;
@@ -117,12 +119,21 @@ public class QuestionServiceImpl implements QuestionService{
 
 
     @Override
-    public Page<QuestionResponseDto> getQuestions(QuestionScopeType scopeType, Long scopeId, QuestionType questionType, Difficulty difficulty, QuestionStatus status, int pageNo, int pageSize, String direction, String sortBy) {
-
-        Sort sort = direction.equalsIgnoreCase("asc")? Sort.by(sortBy).ascending():
-                Sort.by(sortBy).descending();
-        Pageable pageable =  PageRequest.of(pageNo,pageSize,sort);
-
+    public PageResponse<QuestionResponseDto> getQuestions(
+            QuestionScopeType scopeType,
+            Long scopeId,
+            QuestionType questionType,
+            Difficulty difficulty,
+            QuestionStatus status,
+            int pageNo,
+            int pageSize,
+            String direction,
+            String sortBy
+    ) {
+        Sort sort = direction.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Specification<Question> specification =
                 Specification.where(
                         QuestionSpecification.hasScope(scopeType, scopeId)
@@ -133,13 +144,11 @@ public class QuestionServiceImpl implements QuestionService{
                 ).and(
                         QuestionSpecification.hasQuestionType(questionType)
                 );
-
-        Page<Question> questions =
-                questionRepository.findAll(
-                        specification,
-                        pageable
-                );
-        return questions.map(questionMapper::toResponse);
+        Page<QuestionResponseDto> page =
+                questionRepository
+                        .findAll(specification, pageable)
+                        .map(questionMapper::toResponse);
+        return PageResponseMapper.from(page);
     }
 
     @Override

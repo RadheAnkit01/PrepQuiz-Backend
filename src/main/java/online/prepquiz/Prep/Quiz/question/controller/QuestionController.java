@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import online.prepquiz.Prep.Quiz.common.dto.PageResponse;
 import online.prepquiz.Prep.Quiz.question.dto.BulkQuestionResponseDto;
 import online.prepquiz.Prep.Quiz.question.dto.CreateQuestionDto;
 import online.prepquiz.Prep.Quiz.question.dto.QuestionResponseDto;
@@ -53,9 +54,8 @@ public class QuestionController {
         );
     }
 
-
     @GetMapping
-    public ResponseEntity<Page<QuestionResponseDto>> getQuestions(
+    public ResponseEntity<PageResponse<QuestionResponseDto>> getQuestions(
             @RequestParam(required = false) QuestionScopeType scopeType,
             @RequestParam(required = false) Long scopeId,
             @RequestParam(required = false) QuestionType questionType,
@@ -64,7 +64,7 @@ public class QuestionController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50")
             @Min(value = 1, message = "pageSize must be at least 1")
-            @Max(value = 100, message = "pageSize cannot be greater than 50")
+            @Max(value = 100, message = "pageSize cannot be greater than 100")
             int pageSize,
             @RequestParam(defaultValue = "asc") String direction,
             @RequestParam(defaultValue = "id") String sortBy

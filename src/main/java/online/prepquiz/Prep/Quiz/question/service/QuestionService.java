@@ -2,6 +2,7 @@ package online.prepquiz.Prep.Quiz.question.service;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import online.prepquiz.Prep.Quiz.common.dto.PageResponse;
 import online.prepquiz.Prep.Quiz.question.dto.BulkQuestionResponseDto;
 import online.prepquiz.Prep.Quiz.question.dto.CreateQuestionDto;
 import online.prepquiz.Prep.Quiz.question.dto.QuestionResponseDto;
@@ -24,13 +25,20 @@ public interface QuestionService {
 
     QuestionResponseDto getQuestionById(Long id);
 
-//    List<QuestionResponseDto> getQuestionsByChapter(Long chapterId);
-
     QuestionResponseDto updateQuestion(Long id, UpdateQuestionDto request);
 
 //    void inactiveQuestion(Long id);
 
     void deleteQuestion(Long id);
 
-    Page<QuestionResponseDto> getQuestions(QuestionScopeType scopeType, Long scopeId, QuestionType questionType, Difficulty difficulty, QuestionStatus status, int page, @Min(value = 1, message = "pageSize must be at least 1") @Max(value = 50, message = "pageSize cannot be greater than 50") int pageSize, String direction, String sortBy);
+    PageResponse<QuestionResponseDto> getQuestions(
+            QuestionScopeType scopeType,
+            Long scopeId,
+            QuestionType questionType,
+            Difficulty difficulty,
+            QuestionStatus status,
+            int page,
+            @Min(value = 1, message = "pageSize must be at least 1")
+            @Max(value = 50, message = "pageSize cannot be greater than 50")
+            int pageSize, String direction, String sortBy);
 }

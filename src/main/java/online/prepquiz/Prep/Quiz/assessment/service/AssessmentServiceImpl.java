@@ -15,8 +15,11 @@ import online.prepquiz.Prep.Quiz.assessment.mapper.AssessmentQuestionMapper;
 import online.prepquiz.Prep.Quiz.assessment.repository.AssessmentRepository;
 import online.prepquiz.Prep.Quiz.assessment.validator.AssessmentValidator;
 import online.prepquiz.Prep.Quiz.chapter.ChapterService;
+import online.prepquiz.Prep.Quiz.common.dto.PageResponse;
 import online.prepquiz.Prep.Quiz.common.exception.ResourceNotFoundException;
+import online.prepquiz.Prep.Quiz.common.mapper.PageResponseMapper;
 import online.prepquiz.Prep.Quiz.course.CourseService;
+import online.prepquiz.Prep.Quiz.question.dto.QuestionResponseDto;
 import online.prepquiz.Prep.Quiz.question.entity.Question;
 import online.prepquiz.Prep.Quiz.question.repository.QuestionRepository;
 
@@ -87,7 +90,7 @@ public class AssessmentServiceImpl implements AssessmentService{
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AssessmentResponseDto> getAssessments(
+    public PageResponse<AssessmentResponseDto> getAssessments(
             AssessmentScopeType scopeType,
             Long scopeId,
             AssessmentStatus status,
@@ -122,7 +125,9 @@ public class AssessmentServiceImpl implements AssessmentService{
         } else {
             page = assessmentRepository.findAll(pageable);
         }
-        return page.map(assessmentMapper::toResponse);
+        Page<AssessmentResponseDto> assessmentResponseDtoPage =
+                        page.map(assessmentMapper::toResponse);
+        return PageResponseMapper.from(assessmentResponseDtoPage);
     }
 
 

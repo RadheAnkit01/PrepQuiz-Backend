@@ -10,6 +10,7 @@ import online.prepquiz.Prep.Quiz.assessment.dto.UpdateAssessmentDto;
 import online.prepquiz.Prep.Quiz.assessment.enums.AssessmentScopeType;
 import online.prepquiz.Prep.Quiz.assessment.enums.AssessmentStatus;
 import online.prepquiz.Prep.Quiz.assessment.service.AssessmentService;
+import online.prepquiz.Prep.Quiz.common.dto.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +47,7 @@ public class AssessmentController {
 
     //PageList of Assessments
     @GetMapping
-    public ResponseEntity<Page<AssessmentResponseDto>> getAssessments(
+    public ResponseEntity<PageResponse<AssessmentResponseDto>> getAssessments(
             @RequestParam(required = false) AssessmentScopeType scopeType,
             @RequestParam(required = false) Long scopeId,
             @RequestParam(required = false) AssessmentStatus status,
